@@ -1,0 +1,40 @@
+This is a quick example for how to use the trace marker from userspace.
+
+
+$ make
+cc -DENABLE_TRACING -o trace-marker-example trace-marker-example.c trace-marker.c
+$ sudo ./trace-marker-example 
+Hello World!
+$ sudo cat /sys/kernel/debug/tracing/trace
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 20/20   #P:6
+#
+#                              _-----=> irqs-off
+#                             / _----=> need-resched
+#                            | / _---=> hardirq/softirq
+#                            || / _--=> preempt-depth
+#                            ||| /     delay
+#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+#              | |       |   ||||       |         |
+           <...>-26974 [002] .... 82594.709197: tracing_mark_write: test_function: Entering with count 0
+           <...>-26974 [002] .... 82594.709207: tracing_mark_write: test_function: Leaving
+           <...>-26974 [002] .... 82594.709215: tracing_mark_write: test_function: Entering with count 1
+           <...>-26974 [002] .... 82594.709222: tracing_mark_write: test_function: Leaving
+           <...>-26974 [002] .... 82594.709230: tracing_mark_write: test_function: Entering with count 2
+           <...>-26974 [002] .... 82594.709237: tracing_mark_write: test_function: Leaving
+           <...>-26974 [002] .... 82594.709244: tracing_mark_write: test_function: Entering with count 3
+           <...>-26974 [002] .... 82594.709252: tracing_mark_write: test_function: Leaving
+           <...>-26974 [002] .... 82594.709259: tracing_mark_write: test_function: Entering with count 4
+           <...>-26974 [002] .... 82594.709266: tracing_mark_write: test_function: Leaving
+           <...>-26974 [002] .... 82594.709274: tracing_mark_write: test_function: Entering with count 5
+           <...>-26974 [002] .... 82594.709281: tracing_mark_write: test_function: Leaving
+           <...>-26974 [002] .... 82594.709288: tracing_mark_write: test_function: Entering with count 6
+           <...>-26974 [002] .... 82594.709295: tracing_mark_write: test_function: Leaving
+           <...>-26974 [002] .... 82594.709303: tracing_mark_write: test_function: Entering with count 7
+           <...>-26974 [002] .... 82594.709310: tracing_mark_write: test_function: Leaving
+           <...>-26974 [002] .... 82594.709317: tracing_mark_write: test_function: Entering with count 8
+           <...>-26974 [002] .... 82594.709325: tracing_mark_write: test_function: Leaving
+           <...>-26974 [002] .... 82594.709332: tracing_mark_write: test_function: Entering with count 9
+           <...>-26974 [002] .... 82594.709339: tracing_mark_write: test_function: Leaving
+
