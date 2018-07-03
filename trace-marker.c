@@ -41,7 +41,7 @@ int trace_printk(const char *fmt, ...)
 	}
 
 	va_start(argp, fmt);
-	len = vsprintf(buffer, fmt, argp);
+	len = vsnprintf(buffer, sizeof(buffer), fmt, argp);
 	va_end(argp);
 
 	if (len > 0) {
