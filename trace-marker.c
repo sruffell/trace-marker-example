@@ -7,6 +7,8 @@
 #include <stdarg.h>
 #include <unistd.h>
 
+#include <string.h>
+
 #include "trace-marker.h"
 
 #ifdef ENABLE_TRACING
@@ -57,4 +59,24 @@ int trace_printk(const char *fmt, ...)
 	return 0;
 }
 
+int trace_puts(const char *str)
+{
+	size_t written;
+	size_t len;
+	/*
+	 * Since we do not allow this to ever be closed once it was successfully
+	 * opened, we do not need to worry about synchronization here.
+	 */
+	if (tracefd == -1) {
+		return -EINVAL;
+	}
+
+	len = strlen(str);
+	written = write(tracefd, str, len);
+	if (len != written) {
+		return -EFAULT;
+	}
+
+	return 0;
+}
 #endif /* ENABLE_TRACING */

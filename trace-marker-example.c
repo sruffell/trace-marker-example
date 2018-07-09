@@ -7,6 +7,8 @@ static int test_function(int count)
 {
 	trace_printk("%s: Entering with count %d\n", __func__, count);
 	
+	trace_puts("Test\n");
+
 	trace_printk("%s: Leaving\n", __func__);
 }
 
