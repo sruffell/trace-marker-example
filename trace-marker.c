@@ -59,6 +59,13 @@ int trace_printk(const char *fmt, ...)
 	return 0;
 }
 
+static inline size_t trace_strlen(const char *str)
+{
+	size_t i;
+	for (i = 0; *str != '\0'; ++i, ++str);
+	return i;
+}
+
 int trace_puts(const char *str)
 {
 	size_t written;
@@ -71,7 +78,7 @@ int trace_puts(const char *str)
 		return -EINVAL;
 	}
 
-	len = strlen(str);
+	len = trace_strlen(str);
 	written = write(tracefd, str, len);
 	if (len != written) {
 		return -EFAULT;
