@@ -15,6 +15,7 @@
 
 static int tracefd = -1;
 
+#ifdef USE_DIRECT_WRITE
 /*
  * The write function may be hooked via LD_PRELOAD. We should make a direct call here.
  *
@@ -32,6 +33,19 @@ static ssize_t direct_write(int fd, const void *buf, size_t size)
     );
     return ret;
 }
+
+static inline int trace_write(int fd, const void *buf, size_t size)
+{
+	return direct_write(fd, buf, size);
+}
+
+#else
+static inline int trace_write(int fd, const void *buf, size_t size)
+{
+	return write(fd, buf, size);
+}
+
+#endif
 
 int trace_marker_init(void)
 {
@@ -66,7 +80,7 @@ int trace_printk(const char *fmt, ...)
 
 	if (len > 0) {
 		int written;
-		written = direct_write(tracefd, buffer, len - 1);
+		written = trace_write(tracefd, buffer, len - 1);
 		if (written != (len - 1)) {
 			return -EIO;
 		}
@@ -97,7 +111,7 @@ int trace_puts(const char *str)
 	}
 
 	len = trace_strlen(str);
-	written = direct_write(tracefd, str, len);
+	written = trace_write(tracefd, str, len);
 	if (len != written) {
 		return -EFAULT;
 	}
